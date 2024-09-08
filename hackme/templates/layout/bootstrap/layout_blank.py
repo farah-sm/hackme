@@ -24,3 +24,8 @@ class TemplateBootstrapLayoutBlank:
         TemplateHelper.map_context(context)
 
         return context
+
+# This setup ensures that when the blank layout is used, it is correctly initialized with the right context values, making it ready for rendering minimalistic or specialized pages.
+
+
+
