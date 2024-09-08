@@ -7,6 +7,10 @@ from django import template
 from apps.common.utils import get_config_value
 from web_project.template_helpers.theme import TemplateHelper
 
+
+# Dynamically adjusting UI elements (e.g., colors, themes, truncation of text).
+# Formatting and displaying data cleanly.
+# Providing tools to calculate things like course durations, quiz scores, and progress for educational or course-related applications.
 register = template.Library()
 p = inflect.engine()
 
@@ -14,16 +18,22 @@ p = inflect.engine()
 
 
 @register.simple_tag
+# The get_theme_variables() function allows you to pull in theme-related data, 
+# which might include colors, fonts, or layout options that change based on the user's preferences or app configuration.
 def get_theme_variables(scope):
     return mark_safe(TemplateHelper.get_theme_variables(scope))
 
 
 @register.filter(name='get_config')
+# This filter fetches configuration values using get_config_value(). 
+# It’s useful for passing dynamic settings to templates.
 def get_config(value):
     return get_config_value(value)
 
 
 @register.filter
+# Checks if an authenticated user belongs to a specific group. 
+# This can be used to control access to certain UI elements based on user roles.
 def in_user_group(user, group_name):
     if user.is_authenticated:
         return user.groups.filter(name=group_name).exists()
@@ -31,6 +41,7 @@ def in_user_group(user, group_name):
 
 
 @register.filter(name='capitalize_first')
+# Capitalizes the first letter of a string, ensuring proper formatting.
 def capitalize_first(value):
     if isinstance(value, str):
         return value.capitalize()
@@ -38,6 +49,8 @@ def capitalize_first(value):
 
 
 @register.filter
+# Truncates a string to 71 characters and appends ... if needed. 
+# Useful for shortening long text in a UI.
 def truncate_71(value):
     """Returns the first 71 characters of the value, appending '...' if truncated"""
     if len(value) > 71:
@@ -66,6 +79,8 @@ def random_text_color():
 
 
 @register.filter(name='remove_before_vertical_bar')
+# These two filters manipulate strings by removing text before a vertical bar (|) and capitalizing the result. 
+# Likely used for formatting specific types of labels or titles.
 def remove_before_vertical_bar(value):
     try:
         value = str(value)
@@ -76,12 +91,14 @@ def remove_before_vertical_bar(value):
 
 
 @register.filter(name='capitalize_after_remove_vertical_bar')
+# Look at the comment for the function above
 def capitalize_after_remove_vertical_bar(value):
     word = remove_before_vertical_bar(value)
     return word[0].upper() + word[1:]
 
 
 @register.filter
+# Converts a numeric value to its word representation (e.g., 123 becomes "one hundred twenty-three").
 def number_to_words(value):
     try:
         # Convert number to word format
@@ -95,6 +112,8 @@ def number_to_words(value):
 
 
 @register.filter(name='convert_minutes')
+# Converts a duration in minutes to a more readable string, 
+# showing hours and minutes (e.g., "125" becomes "2 hour(s) 5 minute(s)").
 def convert_minutes(duration_minutes):
     if duration_minutes < 0:
         raise ValueError("Duration must be a non-negative integer.")
@@ -110,6 +129,7 @@ def convert_minutes(duration_minutes):
 
 
 @register.filter(name='add_number')
+# Adds two numeric values, useful for performing simple arithmetic in templates.
 def add_number(value, arg):
     total = int(value) + int(arg)
     print(value, arg, total)
@@ -120,7 +140,9 @@ def add_number(value, arg):
 def total_duration(lessons):
     return sum(lesson.duration for lesson in lessons)
 
-
+# The following three filters calculate the total duration, the total number of lessons, 
+# and the number of completed lessons in a lesson list, 
+# likely for displaying course or progress information.
 @register.filter
 def total_lessons(lessons):
     return sum(1 for lesson in lessons)
@@ -132,11 +154,15 @@ def total_completed_lessons(lessons):
 
 
 @register.filter
+# Fetches a value from a dictionary using a key, 
+# which can be handy when passing dictionaries to templates.
 def get_item(dictionary, key):
     return dictionary.get(key)
 
 
 @register.filter(name='to_dict')
+# Converts a JSON string into a Python dictionary, 
+# useful for handling JSON data inside templates.
 def to_dict(value):
     """
     Converts a JSON string to a dictionary.
@@ -150,6 +176,7 @@ def to_dict(value):
 
 
 @register.filter
+# Compares a user’s quiz answers with the correct ones and calculates the score.
 def calculate_course_topic_quiz_score(user_course_topic_quizzes, course_topic_quizzes):
     correct_answers = 0
     total_questions = len(course_topic_quizzes)
@@ -168,11 +195,13 @@ def calculate_course_topic_quiz_score(user_course_topic_quizzes, course_topic_qu
 
 
 @register.filter
+# Generates a random rating between 3.5 and 5.0, which might be used for display purposes (e.g., randomly showing product ratings).
 def random_rating(value):
     return round(random.uniform(3.5, 5.0), 1)
 
 
 @register.filter
+# Finds the milestone closest to a user’s progress (e.g., 25%, 50%, etc.), which might be part of a progress tracker.
 def closest_milestone(progress):
     if progress == 0:
         return progress
@@ -182,6 +211,7 @@ def closest_milestone(progress):
 
 
 @register.filter
+# Retrieves the user’s profile picture URL or provides a default avatar if none exists.
 def profile_picture_url(user):
     if user.profile.profile_picture:
         return user.profile.profile_picture.url
@@ -194,6 +224,7 @@ def random_color():
 
 
 @register.filter
+# Similar to truncate_71, this filter truncates text but with a custom character limit.
 def truncate(value, limit=15):
     """Returns the first 71 characters of the value, appending '...' if truncated"""
     if len(value) > limit:
@@ -202,6 +233,7 @@ def truncate(value, limit=15):
 
 
 @register.filter
+# Returns the course image URL or generates a placeholder image with a background color and course name if none is available.
 def course_image_url(course):
     if course.image:
         return course.image.url
@@ -212,6 +244,7 @@ def course_image_url(course):
 
 
 @register.filter(name='transform_label')
+# Transforms a label by splitting the value (likely an app label and model name) and formatting it for display.
 def transform_label(value):
     try:
         # Split the input string by '.'
@@ -225,6 +258,7 @@ def transform_label(value):
 
 
 @register.filter
+# Converts large numbers into a more readable format (e.g., "1200" becomes "1.2k" and "1,000,000" becomes "1.00m").
 def format_number(num):
     """
     Formats a number to include 'k' for thousands and 'm' for millions.
