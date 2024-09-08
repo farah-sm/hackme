@@ -7,6 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 """
 
+# Configuration for WSGI (Web Server Gateway Interface), typically for serving your Django application.
 import os
 
 from django.core.wsgi import get_wsgi_application
