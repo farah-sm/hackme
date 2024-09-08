@@ -1,6 +1,6 @@
 # Template Settings
 # ------------------------------------------------------------------------------
-
+# It’s unusual to see template.py—it might be a script for generating or managing templates.
 
 # Theme Variables
 # ? Personalize template by changing theme variables (For ex: Name, URL Version etc...)
