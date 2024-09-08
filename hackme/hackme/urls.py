@@ -14,13 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+# URL routing configuration for the Django application.
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from web_project.views import SystemView
 
-# TODO(toheeb): update all underscores to hyphen
+# TODO(): update all underscores to hyphen
 
 urlpatterns = [
     path('admin/', admin.site.urls),
