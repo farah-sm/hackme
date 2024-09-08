@@ -1,5 +1,6 @@
 from django.conf import settings
 
+# Custom context processors to add variables to your template context.
 def my_setting(request):
     return {'MY_SETTING': settings}
 
