@@ -1,6 +1,6 @@
-## Run with venv
+# Run with venv
 
-In the root directory run
+in the root directory run
 
 <!-- python -n venv venv -->
 
